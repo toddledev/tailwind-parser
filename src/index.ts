@@ -104,6 +104,6 @@ function generateId(size = 21): string {
   const chars =
     'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789_-';
   return new Array(size).fill(0)
-    .map(() => chars[Math.round(Math.random() % chars.length)])
+    .map(() => chars[Math.round(Math.random() * chars.length)])
     .join('');
 }
