@@ -13,6 +13,7 @@ import { parseScrollClass } from "./parseScrollClass";
 import { parseShadowClass } from "./parseShadowClass";
 import { parseSizeClasses } from "./parseSizeClasses";
 import { parseSvgClass } from "./parseSvgClass";
+import { parseTailwindBreakpoint } from "./parseTailwindBreakpoint";
 import { parseTailwindTableClass } from "./parseTailwindTableClass";
 import { parseTextClass } from "./parseTextClass";
 import { parseTransformClass } from "./parseTransformClass";
@@ -32,19 +33,42 @@ type modifier =
 | "evenChild"
 | "empty"
 
-export interface Variant {
+
+interface  MediaQuery {
+    'min-width'?: string
+    'max-width'?: string
+    'min-height'?: string
+    'max-height'?: string
+  }
+  export interface StyleVariant {
+    id?: string
+    className?: string
+    class?: string
+    hover?: boolean
+    focus?: boolean
+    focusWithin?: boolean
+    'focus-within'?: boolean
+    'focus-visible'?: boolean
+    checked?: boolean
+    active?: boolean
+    disabled?: boolean
+    firstChild?: boolean
+    'first-child'?: boolean
+    lastChild?: boolean
+    'last-child'?: boolean
+    'first-of-type'?: boolean
+    'last-of-type'?: boolean
+    evenChild?: boolean
+    'even-child'?: boolean
+    visited?: boolean
+    link?: boolean
+    invalid?: boolean
+    empty?: boolean
+    'popover-open'?: boolean
+    mediaQuery?: MediaQuery
+    breakpoint: 'small' | 'medium' | 'large'
+    pseudoElement?: string
     style: CSSProperties
-    className?: string;
-    hover?: boolean;
-    focus?: boolean;
-    focusWithin?: boolean;
-    active?: boolean;
-    disabled?: boolean;
-    firstChild?: boolean;
-    lastChild?: boolean;
-    evenChild?: boolean;
-    empty?: boolean;
-    pseudoElement?: string;
   }
 
 const TAILWIND_MODIFIERS = new Set<modifier>([
@@ -68,9 +92,9 @@ const TAILWIND_MODIFIERS = new Set<modifier>([
     "border-width": "0",
   };
   
-  export function parseClassString(className: string):{style:Record<string, string>, variants:Variant[]} {
+  export function parseClassString(className: string):{style:Record<string, string>, variants:StyleVariant[]} {
     let style = defaultStyles;
-    let variantMap:Record<string, Variant> = {};
+    let variantMap:Record<string, StyleVariant> = {};
     if (className.trim() === "") {
       return { style, variants: [] };
     }
@@ -100,8 +124,14 @@ const TAILWIND_MODIFIERS = new Set<modifier>([
           continue;
         }
         if (TAILWIND_PSEUDO_ELEMENT.has(modifier)) {
+            variant.pseudoElement
           variant.pseudoElement = modifier;
           continue;
+        }
+        const breakpoint = parseTailwindBreakpoint(modifier);
+        if (breakpoint) {
+            variant.mediaQuery = variant.mediaQuery || {};
+            variant.mediaQuery[breakpoint.type] = breakpoint.value
         }
       }
     }
@@ -292,4 +322,3 @@ export type CSSProperties = {
     console.error("COULD NOT PARSE ", cls);
     return {};
   }
-  

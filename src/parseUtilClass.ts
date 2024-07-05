@@ -120,6 +120,12 @@ export function parseUtilClass(className: string): CSSProperties | null {
     if (className === "stacked-fractions") {
         return { "font-variant-numeric": "stacked-fractions" };
     }
+     // Content
+     const contentMatch = className.match(/^content-\["(.*)"\]$/);
+     if (contentMatch) {
+         return { "content": `"${contentMatch[1]}"` };
+     }
+ 
 
     // If no match is found
     return null;
