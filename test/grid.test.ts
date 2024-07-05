@@ -28,6 +28,9 @@ describe('parseGridClasses', () => {
   test('gap-px', () => {
     expect(parseGridClasses('gap-px')).toEqual({ 'gap': '1px' });
   });
+  test('gap-[13px]', () => {
+    expect(parseGridClasses('gap-[13px]')).toEqual({ 'gap': '13px' });
+  });
 
   test('row-gap-2', () => {
     expect(parseGridClasses('row-gap-2')).toEqual({ 'row-gap': '0.5rem' });

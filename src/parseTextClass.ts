@@ -201,5 +201,29 @@ export function parseTextClass(className: string): CSSProperties | null {
         }
     }
 
+     // Add support for arbitrary values
+     const arbitraryValueMatch = className.match(/^([a-z-]+)-\[(.*?)\]$/);
+     if (arbitraryValueMatch) {
+         const property = arbitraryValueMatch[1];
+         const value = arbitraryValueMatch[2];
+ 
+         switch (property) {
+             case "text":
+                 return { color: value };
+             case "font-size":
+                 return { "font-size": value };
+             case "leading":
+                 return { "line-height": value };
+             case "tracking":
+                 return { "letter-spacing": value };
+             case "text-opacity":
+                 return { "--tw-text-opacity": value };
+             case "font-weight":
+                 return { "font-weight": value };
+             // Add more cases as needed for other text-related properties
+         }
+     }
+ 
+
     return null;
 }

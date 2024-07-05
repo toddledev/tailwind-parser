@@ -46,6 +46,12 @@ export function parseBackgroundClasses(className: string): CSSProperties | null 
         return { "background-clip": className.split("-")[2] };
     }
 
+    // Custom background color
+    const customColorMatch = className.match(/^bg-\[(#[0-9A-Fa-f]{3,8})\]$/);
+    if (customColorMatch) {
+        return { "background-color": customColorMatch[1] };
+    }
+
     const colorMatch = className.match(/^bg-(\w+)(?:-(\d+))?$/);
     if (colorMatch) {
         const color = colorMatch[1];

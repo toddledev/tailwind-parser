@@ -46,6 +46,12 @@ describe('parseBackgroundClasses', () => {
     expect(parseBackgroundClasses('bg-clip-text')).toEqual({ 'background-clip': 'text' });
   });
 
+    // Custom Background color
+    test('parses Custom background color classes correctly', () => {
+        // You'll need to mock or provide the colorMap for these tests
+    
+        expect(parseBackgroundClasses('bg-[#bababa]')).toEqual({ 'background-color': '#bababa' });
+      });
   // Background color
   test('parses background color classes correctly', () => {
     // You'll need to mock or provide the colorMap for these tests

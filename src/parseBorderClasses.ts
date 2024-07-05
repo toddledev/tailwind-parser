@@ -1,16 +1,17 @@
 import { CSSProperties, colorMap } from "./tailwind-parser";
 
 export function parseBorderClasses(className: string): CSSProperties | null {
-
     // Border color
     const borderColorMatch = className.match(
-        /^border-(transparent|current|black|white|(\w+)-(50|[1-9][0-9]{2}))$/
+        /^border-(\[#(?:[0-9a-fA-F]{3}){1,2}\]|transparent|current|black|white|(\w+)-(50|[1-9][0-9]{2}))$/
     );
     if (borderColorMatch) {
-        const [, colorName, colorFamily, colorShade] = borderColorMatch;
+        const [, colorValue, colorFamily, colorShade] = borderColorMatch;
         let color: string | undefined;
-        if (colorName in colorMap) {
-            color = colorMap[colorName] as string;
+        if (colorValue.startsWith('[') && colorValue.endsWith(']')) {
+            color = colorValue.slice(1, -1);
+        } else if (colorValue in colorMap) {
+            color = colorMap[colorValue] as string;
         } else if (colorFamily && colorShade) {
             color = (colorMap[colorFamily] as Record<string, string>)?.[colorShade];
         }
@@ -28,9 +29,9 @@ export function parseBorderClasses(className: string): CSSProperties | null {
     }
 
     // Border width
-    const borderWidthMatch = className.match(/^border(-([trbl]))?(-(\d+))?$/);
+    const borderWidthMatch = className.match(/^border(-([trbl]))?(-(\d+|(\[[\d.]+[a-z]+\])))?$/);
     if (borderWidthMatch) {
-        const [, , side, , width] = borderWidthMatch;
+        const [, , side, , width, arbitraryWidth] = borderWidthMatch;
         const prop = side
             ? `border-${side === "r"
                 ? "right"
@@ -40,24 +41,45 @@ export function parseBorderClasses(className: string): CSSProperties | null {
                         ? "top"
                         : "bottom"}-width`
             : "border-width";
-        const value = width ? `${parseInt(width) / 4}rem` : "1px";
+        let value: string;
+        if (arbitraryWidth) {
+            value = arbitraryWidth.slice(1, -1);
+        } else if (width) {
+            value = `${parseInt(width) / 4}rem`;
+        } else {
+            value = "1px";
+        }
         return { [prop]: value };
     }
 
+    // Standalone "border" class
+    if (className === "border") {
+        return { "border-width": "1px" };
+    }
+
     // Border opacity
-    const borderOpacityMatch = className.match(/^border-opacity-(\d+)$/);
+    const borderOpacityMatch = className.match(/^border-opacity-(\d+|(\[[\d.]+%?\]))$/);
     if (borderOpacityMatch) {
-        return { "--tw-border-opacity": borderOpacityMatch[1] + "%" };
+        const [, opacity, arbitraryOpacity] = borderOpacityMatch;
+        const value = arbitraryOpacity ? arbitraryOpacity.slice(1, -1) : `${opacity}%`;
+        return { "--tw-border-opacity": value };
     }
 
     // Divide
-    const divideMatch = className.match(/^divide-(x|y)(-reverse)?(-(\d+))?$/);
+    const divideMatch = className.match(/^divide-(x|y)(-reverse)?(-(\d+|(\[[\d.]+[a-z]+\])))$/);
     if (divideMatch) {
-        const [, direction, reverse, , size] = divideMatch;
+        const [, direction, reverse, , size, arbitrarySize] = divideMatch;
         const prop = `--tw-divide-${direction}-reverse`;
         const value = reverse ? "1" : "0";
         const widthProp = `border-${direction === "x" ? "left" : "top"}-width`;
-        const widthValue = size ? `${parseInt(size) / 4}rem` : "1px";
+        let widthValue: string;
+        if (arbitrarySize) {
+            widthValue = arbitrarySize.slice(1, -1);
+        } else if (size) {
+            widthValue = `${parseInt(size) / 4}rem`;
+        } else {
+            widthValue = "1px";
+        }
         return {
             [prop]: value,
             [widthProp]: widthValue,
@@ -68,7 +90,6 @@ export function parseBorderClasses(className: string): CSSProperties | null {
         };
     }
 
-
     // Border collapse
     if (className === "border-collapse") {
         return { "border-collapse": "collapse" };
@@ -77,12 +98,12 @@ export function parseBorderClasses(className: string): CSSProperties | null {
         return { "border-collapse": "separate" };
     }
 
-      // Rounded corners
-      const roundedMatch = className.match(
-        /^rounded(-([trblse]|tl|tr|br|bl))?(-(\w+))?$/
+    // Rounded corners
+    const roundedMatch = className.match(
+        /^rounded(-([trblse]|tl|tr|br|bl))?(-(\w+|(\[[\d.]+[a-z%]+\])))?$/
     );
     if (roundedMatch) {
-        const [, , side, , size] = roundedMatch;
+        const [, , side, , size, arbitrarySize] = roundedMatch;
         let props: string[];
         if (side) {
             switch (side) {
@@ -117,8 +138,10 @@ export function parseBorderClasses(className: string): CSSProperties | null {
             props = ["border-radius"];
         }
 
-        let value = "0.25rem";
-        if (size) {
+        let value: string;
+        if (arbitrarySize) {
+            value = arbitrarySize.slice(1, -1);
+        } else if (size) {
             switch (size) {
                 case "none":
                     value = "0";
@@ -144,7 +167,11 @@ export function parseBorderClasses(className: string): CSSProperties | null {
                 case "full":
                     value = "9999px";
                     break;
+                default:
+                    value = "0.25rem";
             }
+        } else {
+            value = "0.25rem";
         }
 
         const result: CSSProperties = {};

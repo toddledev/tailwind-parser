@@ -24,13 +24,20 @@ export function parsePaddingClasses(className: string): CSSProperties | null {
         px: "1px",
     };
 
-    const paddingRegex = /^(p|pb|pr|pt|pl|px|py)-(0|1|2|3|4|5|6|8|10|11|12|16|20|24|32|40|48|56|64|px)$/;
+    const paddingRegex = /^(p|pb|pr|pt|pl|px|py)-(\[.*?\]|0|1|2|3|4|5|6|8|10|11|12|16|20|24|32|40|48|56|64|px)$/;
     const match = className.match(paddingRegex);
 
     if (!match) return null;
 
     const [, direction, size] = match;
-    const value = paddingValues[size];
+    let value: string;
+
+    if (size.startsWith('[') && size.endsWith(']')) {
+        // Handle arbitrary value
+        value = size.slice(1, -1);
+    } else {
+        value = paddingValues[size];
+    }
 
     const styles: CSSProperties = {};
 
