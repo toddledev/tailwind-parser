@@ -56,7 +56,9 @@ export function tailwindToToddle(html: string): NodeTree {
     const { style, variants } = parseClassString(
       element.getAttribute('class') || ''
     );
-
+    if (typeof element.className !== "string") {
+      console.log({element})
+    }
     nodeTree[id] = {
       type: 'element',
       tag: element.tagName.toLowerCase(),
