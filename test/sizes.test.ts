@@ -5,6 +5,8 @@ describe('parseSizeClasses', () => {
   // Height tests
   test('parses height classes correctly', () => {
     expect(parseSizeClasses('h-4')).toEqual({ height: '1rem' });
+    expect(parseSizeClasses('h-[11px]')).toEqual({ height: '11px' });
+    
     expect(parseSizeClasses('h-auto')).toEqual({ height: 'auto' });
     expect(parseSizeClasses('h-px')).toEqual({ height: '1px' });
     expect(parseSizeClasses('h-full')).toEqual({ height: '100%' });
@@ -17,13 +19,15 @@ describe('parseSizeClasses', () => {
     expect(parseSizeClasses('max-h-screen')).toEqual({ 'max-height': '100vh' });
     expect(parseSizeClasses('max-h-px')).toEqual({ 'max-height': '1px' });
     expect(parseSizeClasses('max-h-4')).toEqual({ 'max-height': '1rem' });
-  });
+    expect(parseSizeClasses('max-h-[-11px]')).toEqual({ 'max-height': '-11px' });
+});
 
-  // Min Height tests
-  test('parses min-height classes correctly', () => {
+// Min Height tests
+test('parses min-height classes correctly', () => {
     expect(parseSizeClasses('min-h-0')).toEqual({ 'min-height': '0rem' });
     expect(parseSizeClasses('min-h-full')).toEqual({ 'min-height': '100%' });
     expect(parseSizeClasses('min-h-screen')).toEqual({ 'min-height': '100vh' });
+    expect(parseSizeClasses('max-h-[-11px]')).toEqual({ 'max-height': '-11px' });
     expect(parseSizeClasses('min-h-4')).toEqual({ 'min-height': '1rem' });
   });
 
@@ -34,14 +38,20 @@ describe('parseSizeClasses', () => {
     expect(parseSizeClasses('w-px')).toEqual({ width: '1px' });
     expect(parseSizeClasses('w-full')).toEqual({ width: '100%' });
     expect(parseSizeClasses('w-screen')).toEqual({ width: '100vh' });
+    expect(parseSizeClasses('w-[23px]')).toEqual({ width: '23px' });
+    
+  });
+
+
+
+  // Width tests
+  test('parses fractions correctly', () => {
     expect(parseSizeClasses('w-1/2')).toEqual({ width: '50%' });
     expect(parseSizeClasses('w-1/3')).toEqual({ width: '33.333333%' });
-    expect(parseSizeClasses('w-2/3')).toEqual({ width: '66.666667%' });
-    expect(parseSizeClasses('w-1/4')).toEqual({ width: '25%' });
-    expect(parseSizeClasses('w-3/4')).toEqual({ width: '75%' });
-    expect(parseSizeClasses('w-1/5')).toEqual({ width: '20%' });
-    expect(parseSizeClasses('w-2/6')).toEqual({ width: '33.333333%' });
-    expect(parseSizeClasses('w-7/12')).toEqual({ width: '58.333333%' });
+    expect(parseSizeClasses('h-2/3')).toEqual({ height: '66.666667%' });
+    expect(parseSizeClasses('min-w-1/4')).toEqual({ 'min-width': '25%' });
+    expect(parseSizeClasses('max-h-3/4')).toEqual({ 'max-height': '75%' });
+    
   });
 
   // Max Width tests
@@ -69,6 +79,7 @@ describe('parseSizeClasses', () => {
     expect(parseSizeClasses('min-w-min')).toEqual({ 'min-width': 'min-content' });
     expect(parseSizeClasses('min-w-max')).toEqual({ 'min-width': 'max-content' });
     expect(parseSizeClasses('min-w-4')).toEqual({ 'min-width': '1rem' });
+    expect(parseSizeClasses('w-[23vw]')).toEqual({ width: '23vw' });
   });
 
   // Invalid class tests

@@ -69,25 +69,7 @@ export function parseSizeClasses(className: string): CSSProperties | null {
         if (!isNaN(numericValue)) {
             return `${numericValue * 0.25}rem`;
         }
-          // Add support for arbitrary values
-        const arbitraryMatch = value.match(/^\[(.*?)\]$/);
-        if (arbitraryMatch) {
-            return arbitraryMatch[1];
-        }
 
-        return value;
-
-    }
-
-    function getMaxWidthValue(value: string): string {
-      
-        if (fractions[value]) return fractions[value];
-        if (fixedValues[value]) return fixedValues[value];
-
-        const numericValue = parseInt(value, 10);
-        if (!isNaN(numericValue)) {
-            return `${numericValue * 0.25}rem`;
-        }
         const arbitraryMatch = value.match(/^\[(.*?)\]$/);
         if (arbitraryMatch) {
             return arbitraryMatch[1];
@@ -97,46 +79,42 @@ export function parseSizeClasses(className: string): CSSProperties | null {
     }
 
     // Height
-    const heightMatch = className.match(/^h-(\d+|auto|px|full|screen|\[.*?\])$/);
+    const heightMatch = className.match(/^h-(\d+|auto|px|full|screen|1\/2|1\/3|2\/3|1\/4|2\/4|3\/4|1\/5|2\/5|3\/5|4\/5|1\/6|2\/6|3\/6|4\/6|5\/6|1\/12|2\/12|3\/12|4\/12|5\/12|6\/12|7\/12|8\/12|9\/12|10\/12|11\/12|\[.*?\])$/);
     if (heightMatch) {
         const value = heightMatch[1];
         return { height: getSizeValue(value) };
     }
 
     // Max Height
-    const maxHeightMatch = className.match(/^max-h-(full|screen|px|\d+|\[.*?\])$/);
+    const maxHeightMatch = className.match(/^max-h-(full|screen|px|\d+|1\/2|1\/3|2\/3|1\/4|2\/4|3\/4|1\/5|2\/5|3\/5|4\/5|1\/6|2\/6|3\/6|4\/6|5\/6|1\/12|2\/12|3\/12|4\/12|5\/12|6\/12|7\/12|8\/12|9\/12|10\/12|11\/12|\[.*?\])$/);
     if (maxHeightMatch) {
         const value = maxHeightMatch[1];
         return { "max-height": getSizeValue(value) };
     }
 
     // Min Height
-    const minHeightMatch = className.match(/^min-h-(0|full|screen|\d+|\[.*?\])$/);
+    const minHeightMatch = className.match(/^min-h-(0|full|screen|\d+|1\/2|1\/3|2\/3|1\/4|2\/4|3\/4|1\/5|2\/5|3\/5|4\/5|1\/6|2\/6|3\/6|4\/6|5\/6|1\/12|2\/12|3\/12|4\/12|5\/12|6\/12|7\/12|8\/12|9\/12|10\/12|11\/12|\[.*?\])$/);
     if (minHeightMatch) {
         const value = minHeightMatch[1];
         return { "min-height": getSizeValue(value) };
     }
 
     // Width
-    const widthMatch = className.match(
-        /^w-(\d+|auto|px|full|screen|1\/2|1\/3|2\/3|1\/4|2\/4|3\/4|1\/5|2\/5|3\/5|4\/5|1\/6|2\/6|3\/6|4\/6|5\/6|1\/12|2\/12|3\/12|4\/12|5\/12|6\/12|7\/12|8\/12|9\/12|10\/12|11\/12|\[.*?\])$/
-    );
+    const widthMatch = className.match(/^w-(\d+|auto|px|full|screen|1\/2|1\/3|2\/3|1\/4|2\/4|3\/4|1\/5|2\/5|3\/5|4\/5|1\/6|2\/6|3\/6|4\/6|5\/6|1\/12|2\/12|3\/12|4\/12|5\/12|6\/12|7\/12|8\/12|9\/12|10\/12|11\/12|\[.*?\])$/);
     if (widthMatch) {
         const value = widthMatch[1];
         return { width: getSizeValue(value) };
     }
 
     // Max Width
-    const maxWidthMatch = className.match(
-        /^max-w-(xs|sm|md|lg|xl|2xl|3xl|4xl|5xl|6xl|7xl|full|screen-sm|screen-md|screen-lg|screen-xl|screen-2xl|none|0|max|min|prose|\d+|\[.*?\])$/
-    );
+    const maxWidthMatch = className.match(/^max-w-(xs|sm|md|lg|xl|2xl|3xl|4xl|5xl|6xl|7xl|full|screen-sm|screen-md|screen-lg|screen-xl|screen-2xl|none|0|max|min|prose|\d+|1\/2|1\/3|2\/3|1\/4|2\/4|3\/4|1\/5|2\/5|3\/5|4\/5|1\/6|2\/6|3\/6|4\/6|5\/6|1\/12|2\/12|3\/12|4\/12|5\/12|6\/12|7\/12|8\/12|9\/12|10\/12|11\/12|\[.*?\])$/);
     if (maxWidthMatch) {
         const value = maxWidthMatch[1];
-        return { "max-width": getMaxWidthValue(value) };
+        return { "max-width": getSizeValue(value) };
     }
 
     // Min Width
-    const minWidthMatch = className.match(/^min-w-(0|full|max|min|\d+|\[.*?\])$/);
+    const minWidthMatch = className.match(/^min-w-(0|full|max|min|\d+|1\/2|1\/3|2\/3|1\/4|2\/4|3\/4|1\/5|2\/5|3\/5|4\/5|1\/6|2\/6|3\/6|4\/6|5\/6|1\/12|2\/12|3\/12|4\/12|5\/12|6\/12|7\/12|8\/12|9\/12|10\/12|11\/12|\[.*?\])$/);
     if (minWidthMatch) {
         const value = minWidthMatch[1];
         return { "min-width": getSizeValue(value) };
