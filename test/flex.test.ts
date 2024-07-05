@@ -12,9 +12,13 @@ describe('parseFlexClasses', () => {
   test('should parse flex-row class', () => {
     expect(parseFlexClasses('flex-row')).toEqual({ 'flex-direction': 'row' });
   });
+  
+  test('should parse flex-col class', () => {
+    expect(parseFlexClasses('flex-col')).toEqual({ 'flex-direction': 'column' });
+  });
 
   test('should parse flex-col-reverse class', () => {
-    expect(parseFlexClasses('flex-col-reverse')).toEqual({ 'flex-direction': 'col-reverse' });
+    expect(parseFlexClasses('flex-col-reverse')).toEqual({ 'flex-direction': 'column-reverse' });
   });
 
   test('should parse flex-1 class', () => {

@@ -25,7 +25,7 @@ export function parseFlexClasses(className: string): CSSProperties | null {
                 case "flex":
                     return { display: "flex" };
                 case "flexRow":
-                    return { "flex-direction": match[1] };
+                    return { "flex-direction": match[1] === "col" ? "column" : match[1].replace("col-reverse", "column-reverse") };
                 case "flexSize":
                     return { flex: match[1] === "1" ? "1 1 0%" : match[1] };
                 case "flexWrap":

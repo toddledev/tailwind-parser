@@ -81,6 +81,9 @@ describe('parseTextClass', () => {
   test('text-xl', () => {
     expect(parseTextClass('text-xl')).toEqual({ "font-size": "1.25rem" });
   });
+  test('text-[1.5em]', () => {
+    expect(parseTextClass('text-[1.5em]')).toEqual({ "font-size": "1.5em" });
+  });
 
   test('font-sans', () => {
     expect(parseTextClass('font-sans')).toEqual({
@@ -106,6 +109,9 @@ describe('parseTextClass', () => {
 
   test('text color', () => {
     expect(parseTextClass('text-blue-500')).toEqual({ color: "#4299e1" });
+  });
+  test('text arbitraty color', () => {
+    expect(parseTextClass('text-[#ff0000]')).toEqual({ color: "#ff0000" });
   });
 
   test('invalid class', () => {

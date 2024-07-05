@@ -201,6 +201,22 @@ export function parseTextClass(className: string): CSSProperties | null {
         }
     }
 
+    const sizeOrColorMatch = className.match(/^text-\[(.*?)\]$/);
+    if (sizeOrColorMatch) {
+        const value = sizeOrColorMatch[1];
+        
+        // Check if the value is a valid color (hex, rgb, hsl, etc.)
+        if (/^#([0-9A-Fa-f]{3}){1,2}$/.test(value) || 
+            /^rgb\(.*\)$/.test(value) || 
+            /^hsl\(.*\)$/.test(value) ||
+            /^[a-zA-Z]+$/.test(value)) { // Named colors
+            return { color: value };
+        } else {
+            // If it's not a color, assume it's a font size
+            return { "font-size": value };
+        }
+    }
+
      // Add support for arbitrary values
      const arbitraryValueMatch = className.match(/^([a-z-]+)-\[(.*?)\]$/);
      if (arbitraryValueMatch) {

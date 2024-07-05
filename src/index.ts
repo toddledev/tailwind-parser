@@ -1,4 +1,4 @@
-import { Variant, parseClassString } from './tailwind-parser';
+import { StyleVariant, parseClassString } from './tailwind-parser';
 
 interface NodeTree {
   [key: string]: ElementNode | TextNode;
@@ -14,7 +14,7 @@ interface ElementNode {
   events: Record<string, never>;
   style: Record<string, string>;
   styleVariables: Record<string, never>;
-  variants: Variant[];
+  variants: StyleVariant[];
   children: string[];
 }
 

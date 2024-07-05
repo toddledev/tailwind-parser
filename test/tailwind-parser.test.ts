@@ -36,6 +36,16 @@ describe('parseClassString', () => {
       hover: true
     });
   });
+  it('should parse class with single breakpoint', () => {
+    const result = parseClassString('md:flex-col');
+    expect(result.style).toEqual(defaultStyles);
+    expect(result.variants).toHaveLength(1);
+    expect(result.variants[0]).toMatchObject({
+      style: { 'flex-direction': 'column' },
+      mediaQuery:{"min-width":"768px"}
+    });
+    
+  });
 
   it('should parse class with multiple modifiers', () => {
     const result = parseClassString('sm:hover:focus:bg-blue-500');
