@@ -29,12 +29,7 @@ export function tailwindToToddle(html: string): NodeTree {
   const htmlDoc = parser.parseFromString(html, 'text/html');
 
   if (htmlDoc.body.children.length === 0) {
-    return {
-      root: {
-        type: 'text',
-        value: { type: 'value', value: htmlDoc.body.textContent || '' },
-      },
-    };
+  
   }
 
   const nodeTree: NodeTree = {};
@@ -92,7 +87,61 @@ export function tailwindToToddle(html: string): NodeTree {
     };
   }
 
-  visitElement(htmlDoc.body.children[0], 'root');
+  switch (htmlDoc.children.length) {
+    case 0:
+      return {
+        root: {
+          type: 'text',
+          value: { type: 'value', value: htmlDoc.body.textContent || '' },
+        },
+      };
+      case 1: {
+        visitElement(htmlDoc.body.children[0], 'root');
+        return nodeTree;
+      }
+      default: {
+        const children =
+        htmlDoc.body.childNodes.length !== 0
+          ? Array.from(htmlDoc.body.childNodes)
+          : htmlDoc.body.textContent
+          ? [htmlDoc.body.textContent]
+          : [] as (ChildNode | string)[]
+        nodeTree.root = {
+          type:"element",
+          tag:"div",
+          attrs:{},
+          style:{},
+          classes:{},
+          children: children.map(child => {
+            const childId = generateId();
+            if (child instanceof Text) {
+              const content = child.wholeText.replace(/\s+/g, '');
+              if (content === '') {
+                return undefined;
+              }
+              nodeTree[childId] = {
+                type: 'text',
+                value: {
+                  type: 'value',
+                  value: content,
+                },
+              };
+            } else if (child instanceof Element) {
+              visitElement(child, childId);
+            }
+            return childId;
+          }).filter((c):c is string => c !== undefined),
+          events:{},
+          styleVariables:{},
+          variants:[]
+        }
+        return nodeTree
+      }
+      
+
+  }
+
+  
   return nodeTree;
 }
 
