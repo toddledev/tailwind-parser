@@ -68,7 +68,7 @@ export function tailwindToToddle(html: string): NodeTree {
           const childId = generateId();
           if (child instanceof Text) {
             const content = child.textContent ?? ""
-            if (content === '') {
+            if (/^\s*$/.test(content)) {
               return undefined;
             }
             nodeTree[childId] = {
@@ -116,7 +116,7 @@ export function tailwindToToddle(html: string): NodeTree {
             const childId = generateId();
             if (child instanceof Text) {
               const content = child.textContent ?? ""
-              if (content === '') {
+              if (/^\s*$/.test(content)) {
                 return undefined;
               }
               nodeTree[childId] = {
