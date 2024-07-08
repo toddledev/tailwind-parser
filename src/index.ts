@@ -67,7 +67,7 @@ export function tailwindToToddle(html: string): NodeTree {
         .map(child => {
           const childId = generateId();
           if (child instanceof Text) {
-            const content = child.textContent ?? ""
+            const content = (child.textContent ?? "").trim()
             if (/^\s*$/.test(content)) {
               return undefined;
             }
@@ -115,7 +115,7 @@ export function tailwindToToddle(html: string): NodeTree {
           children: children.map(child => {
             const childId = generateId();
             if (child instanceof Text) {
-              const content = child.textContent ?? ""
+              const content = (child.textContent ?? "").trim()
               if (/^\s*$/.test(content)) {
                 return undefined;
               }
