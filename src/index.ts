@@ -115,7 +115,7 @@ export function tailwindToToddle(html: string): NodeTree {
           children: children.map(child => {
             const childId = generateId();
             if (child instanceof Text) {
-              const content = child.wholeText.replace(/\s+/g, '');
+              const content = child.wholeText
               if (content === '') {
                 return undefined;
               }
